@@ -109,21 +109,22 @@ const client = new MongoClient(uri, {
       res.send(result)
   })
 
-  app.get('/users/admin/:email', verifyToken, async (req, res) => {
+  app.get('/users/admin/:email', verifyToken,verifyAdmin,async (req, res) => {
     const email = req.params.email;
     if (email !== req.decoded.email) {
       return res.status(403).send({ message: 'forbidden access' })
     }
-
     const query = { email: email };
-    const user = await userCollection.findOne(query);
-    let admin = false;
-    if (user) {
-      admin = user?.role === 'admin';
-    }
+  const user = await userCollection.findOne(query);
+  let admin = false;
+  if (user) {
+    admin = user?.role === 'admin';
+  }
     res.send({ admin });
-  })
-   
+})
+
+
+  
     app.get('/users',verifyToken,verifyAdmin,async(req,res)=>{
         const cursor = userCollection.find()
         const result = await cursor.toArray()
@@ -161,8 +162,19 @@ app.patch('/users/admin/:id',verifyToken,verifyAdmin, async(req,res)=>{
  }
  const result = await userCollection.updateOne(filter,updateDoc)
  res.send(result)
-
 })
+
+app.patch('/users/surveyor/:id',verifyToken,verifyAdmin, async(req,res)=>{
+  const id = req.params.id; 
+  const filter = {_id : new ObjectId(id)}
+  const updateDoc = {
+     $set:{
+        role: 'surveyor'
+     }
+  }
+  const result = await userCollection.updateOne(filter,updateDoc)
+  res.send(result)
+ })
   
    
     
@@ -189,7 +201,6 @@ app.post('/create-payment-intent',async(req,res)=>{
   const {price} = req.body 
 
   const amount = parseInt(price * 100)
-  console.log(amount,'inside the amount')  
   const paymentIntent = await stripe.paymentIntents.create({
       amount:amount, 
       currency:'usd',

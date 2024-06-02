@@ -104,7 +104,7 @@ const client = new MongoClient(uri, {
 
     })
 
-    app.get('/users',verifyToken,async(req,res)=>{
+    app.get('/users',async(req,res)=>{
       const result = await userCollection.find().toArray()
       res.send(result)
   })
@@ -125,11 +125,11 @@ const client = new MongoClient(uri, {
 
 
   
-    app.get('/users',verifyToken,verifyAdmin,async(req,res)=>{
-        const cursor = userCollection.find()
-        const result = await cursor.toArray()
-        res.send(result)
-    })
+    // app.get('/users',verifyToken,async(req,res)=>{
+    //     const cursor = userCollection.find()
+    //     const result = await cursor.toArray()
+    //     res.send(result)
+    // })
 
     app.post('/users',async(req,res)=>{
       const user = req.body;
@@ -175,6 +175,19 @@ app.patch('/users/surveyor/:id',verifyToken,verifyAdmin, async(req,res)=>{
   const result = await userCollection.updateOne(filter,updateDoc)
   res.send(result)
  })
+
+ app.patch('/users/pro/:email',verifyToken, async(req,res)=>{
+   
+   const email = req.params.email;
+   const filter ={email :email}
+  const updateDoc = {
+     $set:{
+        role: 'pro-user'
+     }
+  }
+  const result = await userCollection.updateOne(filter,updateDoc)
+  res.send(result)
+ })
   
    
     
@@ -198,7 +211,7 @@ app.patch('/users/surveyor/:id',verifyToken,verifyAdmin, async(req,res)=>{
 // paymnet 
 
 app.post('/create-payment-intent',async(req,res)=>{
-  const {price} = req.body 
+  const price = 100
 
   const amount = parseInt(price * 100)
   const paymentIntent = await stripe.paymentIntents.create({

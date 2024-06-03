@@ -47,6 +47,7 @@ const client = new MongoClient(uri, {
     try { 
     const userCollection = client.db('accountDB').collection('accounts')
     const mobileCollection = client.db('accountDB').collection('mobile')
+    const surveyorCollection = client.db('accountDB').collection('surveyor')
 
     const verifyToken = async(req,res,next)=>{
       if(!req.headers.authorization){
@@ -234,6 +235,12 @@ app.get('/mobile',async(req,res)=>{
   const cursor = mobileCollection.find()
   const result = await cursor.toArray()
   res.send(result)
+})
+
+app.get('/surveyor',async(req,res)=>{
+   const cursor = surveyorCollection.find()
+   const result = await cursor.toArray()
+   res.send(result)
 })
 
 

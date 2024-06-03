@@ -94,7 +94,18 @@ const client = new MongoClient(uri, {
       const user = await userCollection.findOne(query);
       const isAdmin = user?.role === 'admin';
       if (!isAdmin) {
-        return res.status(403).send({ message: 'forbidden access' });
+        return res.status(403).send({ message: 'Your are not a admin' });
+      }
+      next();
+    }
+
+    const verifySurveyor = async (req, res, next) => {
+      const email = req.decoded.email;
+      const query = { email: email };
+      const user = await userCollection.findOne(query);
+      const isAdmin = user?.role === 'surveyor';
+      if (!isAdmin) {
+        return res.status(403).send({ message: 'You are not a surveyor' });
       }
       next();
     }
@@ -241,6 +252,12 @@ app.get('/surveyor',async(req,res)=>{
    const cursor = surveyorCollection.find()
    const result = await cursor.toArray()
    res.send(result)
+})
+
+app.post('/surveyor',verifyToken,verifySurveyor,async(req,res)=>{
+    const user = req.body
+    const result = await surveyorCollection.insertOne(user)
+    res.send(user)
 })
 
 

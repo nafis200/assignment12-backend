@@ -337,6 +337,12 @@ app.get('/dates',async(req,res)=>{
    res.send(result)
 })
 
+app.get('/totalvotes',async(req,res)=>{
+  const cursor = await surveyorCollection.find().sort('totalVotes',-1).limit(6) 
+  const result = await cursor.toArray()
+  res.send(result)
+})
+
 
 
 

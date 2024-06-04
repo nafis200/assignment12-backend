@@ -254,6 +254,33 @@ app.get('/mobile',async(req,res)=>{
   const result = await surveyorCollection.findOne(query)
   res.send(result)
 
+ }) 
+
+ app.patch('/details/:id',async(req,res)=>{
+    const id = req.params.id 
+    const user = req.body 
+    const {value} = user
+    const query = {_id : new ObjectId(id)}
+    if(value === "yes"){
+        const updateDoc = {
+           $inc:{
+             countyes: 1,
+             totalVotes:1,
+           }
+        }
+        const result = await surveyorCollection.updateOne(query,updateDoc)
+
+        const updated1 = {
+          $set:{
+            options: value,
+         }
+        }
+        const result1 = await surveyorCollection.updateOne(query,updated1)
+        res.send({result,result1})
+    }
+    else{
+        console.log(0)
+    }
  })
 
 app.get('/surveyor/:id',async(req,res)=>{

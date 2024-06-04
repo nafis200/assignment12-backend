@@ -279,7 +279,21 @@ app.get('/mobile',async(req,res)=>{
         res.send({result,result1})
     }
     else{
-        console.log(0)
+      const updateDoc = {
+        $inc:{
+          countno: 1,
+          totalVotes:1,
+        }
+     }
+     const result = await surveyorCollection.updateOne(query,updateDoc)
+
+     const updated1 = {
+       $set:{
+         options: value,
+      }
+     }
+     const result1 = await surveyorCollection.updateOne(query,updated1)
+     res.send({result,result1})
     }
  })
 

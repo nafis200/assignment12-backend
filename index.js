@@ -323,10 +323,18 @@ app.get('/surveyor/:id',async(req,res)=>{
    }
 })
 
+
+
 app.post('/surveyor',verifyToken,verifySurveyor,async(req,res)=>{
     const user = req.body
     const result = await surveyorCollection.insertOne(user)
     res.send(user)
+})
+
+app.get('/dates',async(req,res)=>{
+   const cursor = await surveyorCollection.find().sort('Timestamp',-1).limit(6) 
+   const result = await cursor.toArray()
+   res.send(result)
 })
 
 

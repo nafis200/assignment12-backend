@@ -248,10 +248,28 @@ app.get('/mobile',async(req,res)=>{
   res.send(result)
 })
 
-app.get('/surveyor',async(req,res)=>{
-   const cursor = surveyorCollection.find()
-   const result = await cursor.toArray()
-   res.send(result)
+ app.get('/surve/:id',async(req,res)=>{
+      const id = req.params.id 
+      const query = {_id : new ObjectId(id)}
+      const result = await surveyorCollection.findOne(query)
+      res.send(result)
+ })
+
+app.get('/surveyor/:id',async(req,res)=>{
+   const id = req.params.id 
+
+   if(id === "all")
+   {
+    const cursor = surveyorCollection.find()
+    const result = await cursor.toArray()
+    res.send(result)
+   }
+   else{
+     const query = {medium: id}
+     const cursor = surveyorCollection.find(query) 
+     const result = await cursor.toArray()
+     res.send(result)
+   }
 })
 
 app.post('/surveyor',verifyToken,verifySurveyor,async(req,res)=>{

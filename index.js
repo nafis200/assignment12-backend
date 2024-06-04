@@ -121,6 +121,8 @@ const client = new MongoClient(uri, {
       res.send(result)
   })
 
+
+
   app.get('/users/admin/:email', verifyToken,verifyAdmin,async (req, res) => {
     const email = req.params.email;
     // if (email !== req.decoded.email) {
@@ -154,6 +156,14 @@ const client = new MongoClient(uri, {
       const result = await userCollection.insertOne(cartItem)
       res.send(result)
  })
+
+ app.get('/useremail/:email',async(req,res)=>{
+  const email = req.params.email
+  console.log(email)
+  const query = {email: email}
+  const result = await userCollection.findOne(query)
+  res.send(result)
+ }) 
 
  app.delete('/users/:id',async(req,res)=>{
   const id = req.params.id; 
@@ -253,7 +263,6 @@ app.get('/mobile',async(req,res)=>{
   const query = {_id : new ObjectId(id)}
   const result = await surveyorCollection.findOne(query)
   res.send(result)
-
  }) 
 
  app.patch('/details/:id',async(req,res)=>{

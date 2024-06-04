@@ -248,11 +248,12 @@ app.get('/mobile',async(req,res)=>{
   res.send(result)
 })
 
- app.get('/surve/:id',async(req,res)=>{
-      const id = req.params.id 
-      const query = {_id : new ObjectId(id)}
-      const result = await surveyorCollection.findOne(query)
-      res.send(result)
+ app.get('/details/:id',async(req,res)=>{
+  const id = req.params.id
+  const query = {_id : new ObjectId(id)}
+  const result = await surveyorCollection.findOne(query)
+  res.send(result)
+
  })
 
 app.get('/surveyor/:id',async(req,res)=>{

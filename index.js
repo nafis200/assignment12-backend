@@ -48,6 +48,7 @@ const client = new MongoClient(uri, {
     const userCollection = client.db('accountDB').collection('accounts')
     const mobileCollection = client.db('accountDB').collection('mobile')
     const surveyorCollection = client.db('accountDB').collection('surveyor')
+    const reportCollection = client.db('accountDB').collection('report')
 
     const verifyToken = async(req,res,next)=>{
       if(!req.headers.authorization){
@@ -341,6 +342,12 @@ app.get('/totalvotes',async(req,res)=>{
   const cursor = await surveyorCollection.find().sort('totalVotes',-1).limit(6) 
   const result = await cursor.toArray()
   res.send(result)
+})
+
+app.post('/report',async(req,res)=>{
+    const user = req.body;
+    const result = await reportCollection.insertOne(user)
+    res.send(result)
 })
 
 

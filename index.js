@@ -383,15 +383,15 @@ app.get('/publish',verifyToken,verifySurveyor,async(req,res)=>{
 
 
 app.patch('/publish/:id', async(req,res)=>{
-   
+  
   const id = req.params.id;
-  const filter =  {_id : new ObjectId(id)}
+  const filter =  { _id : new ObjectId(id) }
  const updateDoc = {
     $set:{
-       status: 'unpublish'
+       status:"unpublish"
     }
  }
- const result = await userCollection.updateOne(filter,updateDoc)
+ const result = await surveyorCollection.updateOne(filter,updateDoc)
  res.send(result)
 })
 

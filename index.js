@@ -122,6 +122,23 @@ const client = new MongoClient(uri, {
       res.send(result)
   })
 
+   app.get('/adminuser/:id',verifyToken,verifyAdmin,async(req,res)=>{
+    const id = req.params.id 
+   
+    if(id === "all")
+    {
+     const cursor = userCollection.find()
+     const result = await cursor.toArray()
+     res.send(result)
+    }
+    else{
+      const query = {role: id}
+      const cursor = userCollection.find(query) 
+      const result = await cursor.toArray()
+      res.send(result)
+    }
+   })
+
 
 
   app.get('/users/admin/:email', verifyToken,verifyAdmin,async (req, res) => {
@@ -333,7 +350,7 @@ app.post('/surveyor',verifyToken,verifySurveyor,async(req,res)=>{
 })
 
 app.get('/dates',async(req,res)=>{
-   const cursor = await surveyorCollection.find().sort('Timestamp',-1).limit(6) 
+   const cursor = await surveyorCollection.find().sort('Timestamp', 1).limit(6) 
    const result = await cursor.toArray()
    res.send(result)
 })

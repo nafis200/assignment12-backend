@@ -49,6 +49,7 @@ const client = new MongoClient(uri, {
     const mobileCollection = client.db('accountDB').collection('mobile')
     const surveyorCollection = client.db('accountDB').collection('surveyor')
     const reportCollection = client.db('accountDB').collection('report')
+    const FeedCollection = client.db('accountDB').collection('feedback')
 
     const verifyToken = async(req,res,next)=>{
       if(!req.headers.authorization){
@@ -138,6 +139,8 @@ const client = new MongoClient(uri, {
       res.send(result)
     }
    })
+
+   
 
 
 
@@ -365,6 +368,44 @@ app.post('/report',async(req,res)=>{
     const user = req.body;
     const result = await reportCollection.insertOne(user)
     res.send(result)
+})
+
+app.post('/publish',verifyToken,verifyAdmin,async(req,res)=>{
+  const user = req.body;
+  const result = await FeedCollection.insertOne(user)
+})
+
+app.get('/publish',verifyToken,verifySurveyor,async(req,res)=>{
+  const cursor = FeedCollection.find()
+  const result = await cursor.toArray()
+  res.send(result)
+})
+
+
+app.patch('/publish/:id', async(req,res)=>{
+   
+  const id = req.params.id;
+  const filter =  {_id : new ObjectId(id)}
+ const updateDoc = {
+    $set:{
+       status: 'unpublish'
+    }
+ }
+ const result = await userCollection.updateOne(filter,updateDoc)
+ res.send(result)
+})
+
+app.patch('/publish1/:id',async(req,res)=>{
+  const id = req.params.id 
+  const query = {_id : new ObjectId(id)}
+      const updated1 = {
+        $set:{
+          status:"publish",
+       }
+      }
+      const result1 = await surveyorCollection.updateOne(query,updated1)
+      res.send(result1)
+  
 })
 
 

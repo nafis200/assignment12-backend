@@ -195,6 +195,17 @@ const client = new MongoClient(uri, {
   res.send(result)
 })
 
+app.delete('/feedback/:id',async(req,res)=>{
+  const id = req.params.id
+  const query = {
+     _id: new ObjectId(id)
+  }
+  const result = await FeedCollection.deleteOne(query)
+  console.log(result)
+  res.send(result)
+
+})
+
 app.patch('/users/admin/:id',verifyToken,verifyAdmin, async(req,res)=>{
  const id = req.params.id; 
  const filter = {_id : new ObjectId(id)}
@@ -388,6 +399,12 @@ app.get('/publish',verifyToken,verifySurveyor,async(req,res)=>{
   const result = await cursor.toArray()
   res.send(result)
 })
+
+app.get('/feedbacksurvey',async(req,res)=>{
+  const cursor = FeedCollection.find()
+  const result = await cursor.toArray()
+  res.send(result)
+}) 
 
 
 app.patch('/publish/:id', async(req,res)=>{

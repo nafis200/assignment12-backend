@@ -50,6 +50,7 @@ const client = new MongoClient(uri, {
     const surveyorCollection = client.db('accountDB').collection('surveyor')
     const reportCollection = client.db('accountDB').collection('report')
     const FeedCollection = client.db('accountDB').collection('feedback')
+    const responseCollection = client.db('accountDB').collection('response')
 
     const verifyToken = async(req,res,next)=>{
       if(!req.headers.authorization){
@@ -448,6 +449,12 @@ app.patch('/update/:id',async(req,res)=>{
    }
    const result = await surveyorCollection.updateOne(query,update) 
    res.send(result)
+})
+
+app.post('/surveyresponse',async(req,res)=>{
+  const cartItem = req.body; 
+  const result = await responseCollection.insertOne(cartItem)
+  res.send(result)
 })
 
 

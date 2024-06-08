@@ -352,6 +352,14 @@ app.post('/surveyor',verifyToken,verifySurveyor,async(req,res)=>{
     res.send(user)
 })
 
+app.get('/surveyors/:id',async(req,res)=>{
+   const id = req.params.id 
+   const query = { _id: new ObjectId(id) }
+   const cursor = surveyorCollection.find(query) 
+   const result = await cursor.toArray() 
+   res.send(result)
+})
+
 app.get('/dates',async(req,res)=>{
    const cursor = await surveyorCollection.find().sort('Timestamp', 1).limit(6) 
    const result = await cursor.toArray()
@@ -406,6 +414,23 @@ app.patch('/publish1/:id',async(req,res)=>{
       const result1 = await surveyorCollection.updateOne(query,updated1)
       res.send(result1)
   
+})
+
+app.patch('/update/:id',async(req,res)=>{
+   const user = req.body 
+   const {medium,Dates,title,description} = user
+   const id = req.params.id 
+   const query = {_id : new ObjectId(id)}
+   const update = {
+     $set:{
+        medium : medium,
+        Dates: Dates, 
+        title: title, 
+        description:description
+     }
+   }
+   const result = await surveyorCollection.updateOne(query,update) 
+   res.send(result)
 })
 
 

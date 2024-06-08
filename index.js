@@ -181,7 +181,6 @@ const client = new MongoClient(uri, {
 
  app.get('/useremail/:email',async(req,res)=>{
   const email = req.params.email
-  console.log(email)
   const query = {email: email}
   const result = await userCollection.findOne(query)
   res.send(result)
@@ -202,7 +201,6 @@ app.delete('/feedback/:id',async(req,res)=>{
      _id: new ObjectId(id)
   }
   const result = await FeedCollection.deleteOne(query)
-  console.log(result)
   res.send(result)
 
 })
@@ -455,6 +453,23 @@ app.post('/surveyresponse',async(req,res)=>{
   const cartItem = req.body; 
   const result = await responseCollection.insertOne(cartItem)
   res.send(result)
+})
+
+app.get('/surveyresponse/:email',async(req,res)=>{ 
+  const email = req.params.email 
+  const query = {email: email} 
+  const cursor = responseCollection.find(query)
+  const result = await cursor.toArray()
+  res.send(result)
+
+
+})
+app.get('/surveyunique/:id',async(req,res)=>{
+     const id = req.params.id 
+     const query = {_id: new ObjectId(id)}
+     const cursor = responseCollection.find(query)
+     const result = await cursor.toArray()
+     res.send(result)
 })
 
 
